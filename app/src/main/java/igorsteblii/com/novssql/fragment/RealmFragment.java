@@ -1,13 +1,23 @@
 package igorsteblii.com.novssql.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 
 import org.json.JSONArray;
 
+import java.util.List;
+
+import igorsteblii.com.novssql.dto.Date;
 import igorsteblii.com.novssql.dto.Song;
 import io.realm.Realm;
+import io.realm.RealmQuery;
 import io.realm.RealmResults;
+import io.realm.exceptions.RealmPrimaryKeyConstraintException;
+
+import static igorsteblii.com.novssql.Constants.DEFAULT_YEARS;
+import static igorsteblii.com.novssql.sql.DataBaseTableOpenHelper.Columns.COLUMN_NAME_YEAR;
 
 /**
  * @author igorsteblii on 05.08.16.
@@ -20,6 +30,20 @@ public class RealmFragment extends BaseFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         realm = Realm.getDefaultInstance();
+        addDatesIfDoNotExist();
+    }
+
+    private void addDatesIfDoNotExist() {
+        long count = realm.where(Date.class).count();
+        if (count == 0) {
+            Date d;
+            realm.beginTransaction();
+            for (int year : DEFAULT_YEARS) {
+                d = new Date(year);
+                realm.copyToRealm(d);
+            }
+            realm.commitTransaction();
+        }
     }
 
     @Override
@@ -29,15 +53,48 @@ public class RealmFragment extends BaseFragment {
         realm = null;
     }
 
+    /*Select all songs where 'year' is greater than '2001'*/
     @Override
     protected void selectComplex() {
+        long time = System.currentTimeMillis();
+        RealmResults<Song> all = getByYear();
+//        RealmResults<Song> all = getByYearFromDateTable();
+        long time2 = System.currentTimeMillis() - time;
+        String s = "count: " + all.size() + " ,select * by params: " + time2 + "ms";
+        mAdapter.add(all);
+        mAdapter.notifyDataSetChanged();
+        timeView.setText(s);
+    }
 
+    private RealmResults<Song> getByYearFromDateTable() {
+        RealmResults<Date> dates = realm.where(Date.class).findAll();
+        RealmQuery<Song> query = realm.where(Song.class);
+        query.beginGroup();
+        for (int i = 0; i < dates.size(); i++) {
+            if (i != 0) {
+                query.or();
+            }
+            query.equalTo(COLUMN_NAME_YEAR, dates.get(i).getYear());
+        }
+        query.endGroup();
+        return query.findAll();
+    }
+
+    @NonNull
+    private RealmResults<Song> getByYear() {
+        return realm.where(Song.class).greaterThan("year", 2001).findAll();
     }
 
     @Override
     protected void selectAll() {
+        long time = System.currentTimeMillis();
         RealmResults<Song> all = realm.where(Song.class).findAll();
-
+        //realm.copyFromRealm(all); // if you have multithreading
+        long time2 = System.currentTimeMillis() - time;
+        String s = "count: " + all.size() + " ,select all: " + time2 + "ms";
+        mAdapter.add(all);
+        mAdapter.notifyDataSetChanged();
+        timeView.setText(s);
     }
 
     @Override
@@ -45,8 +102,14 @@ public class RealmFragment extends BaseFragment {
         JSONArray array = listener.getJsonSonArray();
         long time = System.currentTimeMillis();
         realm.beginTransaction();
-        realm.createAllFromJson(Song.class, array);
-        realm.commitTransaction();
+        try {
+            realm.createAllFromJson(Song.class, array);
+        } catch (RealmPrimaryKeyConstraintException e) {
+            Snackbar.make(getView(), e.getMessage(), Snackbar.LENGTH_SHORT).show();
+            return;
+        } finally {
+            realm.commitTransaction();
+        }
         time = System.currentTimeMillis() - time;
         String s = "count : " + array.length() + ", " + "from JSON to Realm :" + time + "ms";
         timeView.setText(s);
@@ -54,7 +117,20 @@ public class RealmFragment extends BaseFragment {
 
     @Override
     protected void addRandom() {
-
+        List<Song> song = listener.createRandomSong();
+        long time = System.currentTimeMillis();
+        realm.beginTransaction();
+        try {
+            realm.copyToRealm(song);
+        } catch (RealmPrimaryKeyConstraintException e) {
+            Snackbar.make(getView(), e.getMessage(), Snackbar.LENGTH_SHORT).show();
+            return;
+        } finally {
+            realm.commitTransaction();
+        }
+        time = System.currentTimeMillis() - time;
+        String s = "count : " + song.size() + ", " + "insert:" + time + "ms";
+        timeView.setText(s);
     }
 
 }

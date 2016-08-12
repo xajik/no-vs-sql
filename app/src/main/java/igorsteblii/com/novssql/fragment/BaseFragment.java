@@ -14,7 +14,11 @@ import android.widget.TextView;
 
 import org.json.JSONArray;
 
+import java.util.List;
+
 import igorsteblii.com.novssql.R;
+import igorsteblii.com.novssql.adapter.SongAdapter;
+import igorsteblii.com.novssql.dto.Song;
 
 /**
  * @author igorsteblii on 05.08.16.
@@ -28,6 +32,13 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     protected TextView timeView;
     protected RecyclerView recyclerView;
     protected IListener listener;
+    protected SongAdapter mAdapter;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mAdapter = new SongAdapter();
+    }
 
     @Override
     public void onAttach(Activity activity) {
@@ -52,6 +63,7 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
         final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(mAdapter);
         return view;
     }
 
@@ -84,6 +96,8 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     public interface IListener {
 
         JSONArray getJsonSonArray();
+
+        List<Song> createRandomSong();
 
     }
 

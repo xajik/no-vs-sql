@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import igorsteblii.com.novssql.R;
@@ -18,10 +18,10 @@ import igorsteblii.com.novssql.dto.Song;
 
 public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
 
-    private ArrayList<Song> mSongs;
+    private List<Song> mSongs;
 
     public SongAdapter() {
-        mSongs = new ArrayList<>();
+        this.mSongs = Collections.emptyList();
     }
 
     @Override
@@ -36,7 +36,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
     }
 
     public void add(List<Song> songs) {
-        mSongs.addAll(songs);
+        mSongs = songs;
     }
 
     @Override

@@ -6,41 +6,102 @@
     android:padding="8dp">
 
     <TextView
-        android:id="@+id/song_artist"
+        android:id="@+id/artist_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
+        android:text="Artist:"
+        android:textColor="@color/colorAccent"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/song_artist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/artist_header"
+        android:layout_toEndOf="@id/artist_header"
+        android:layout_toRightOf="@id/artist_header"
+        android:maxLines="1"
+        android:paddingLeft="8dp"
+        android:paddingStart="8dp"
         android:text="artist" />
+
+    <TextView
+        android:id="@+id/title_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/song_artist"
+        android:layout_toRightOf="@id/song_artist"
+        android:paddingLeft="8dp"
+        android:paddingStart="8dp"
+        android:text="Title:"
+        android:textColor="@color/colorAccent"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/song_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@id/song_artist"
-        android:layout_toEndOf="@id/song_artist"
-        android:layout_toRightOf="@id/song_artist"
+        android:layout_toEndOf="@id/title_header"
+        android:layout_toRightOf="@id/title_header"
+        android:maxLines="1"
         android:paddingLeft="8dp"
         android:paddingStart="8dp"
         android:text="title" />
 
     <TextView
-        android:id="@+id/song_duration"
+        android:id="@+id/duration_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/song_artist"
+        android:text="Duration:"
+        android:textColor="@color/colorAccent"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/song_duration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/duration_header"
+        android:layout_below="@+id/song_artist"
+        android:layout_toEndOf="@id/duration_header"
+        android:layout_toRightOf="@id/duration_header"
+        android:paddingLeft="8dp"
+        android:paddingStart="8dp"
         android:text="duration" />
+
+    <TextView
+        android:id="@+id/year_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/duration_header"
+        android:layout_toEndOf="@id/song_duration"
+        android:layout_toRightOf="@id/song_duration"
+        android:paddingLeft="8dp"
+        android:paddingStart="8dp"
+        android:text="Year:"
+        android:textColor="@color/colorAccent"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/song_year"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/song_artist"
-        android:layout_toEndOf="@id/song_duration"
-        android:layout_toRightOf="@id/song_duration"
+        android:layout_alignBaseline="@id/duration_header"
+        android:layout_toEndOf="@id/year_header"
+        android:layout_toRightOf="@id/year_header"
         android:paddingLeft="8dp"
         android:paddingStart="8dp"
         android:text="year" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/duration_header"
+        android:background="@color/divider"
+        android:paddingTop="8dp" />
 
 </RelativeLayout>

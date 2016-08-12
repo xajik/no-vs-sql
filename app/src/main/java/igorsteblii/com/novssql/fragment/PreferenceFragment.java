@@ -8,8 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import igorsteblii.com.novssql.R;
+import igorsteblii.com.novssql.dto.Date;
 import igorsteblii.com.novssql.dto.Song;
-import igorsteblii.com.novssql.sql.SongDBOpenHelper;
+import igorsteblii.com.novssql.sql.DataBaseTableOpenHelper;
 import io.realm.Realm;
 
 /**
@@ -33,10 +34,12 @@ public class PreferenceFragment extends Fragment implements View.OnClickListener
                 Realm realm = Realm.getDefaultInstance();
                 realm.beginTransaction();
                 realm.delete(Song.class);
+                realm.delete(Date.class);
                 realm.commitTransaction();
                 break;
             case R.id.drop_sql:
-                new SongDBOpenHelper(getActivity()).dropTable();
+                getActivity().deleteDatabase(DataBaseTableOpenHelper.DATABASE_NAME);
+                new DataBaseTableOpenHelper(getActivity()).dropTable();
                 break;
         }
     }

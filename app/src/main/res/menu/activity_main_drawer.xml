@@ -11,6 +11,14 @@
             android:icon="@drawable/ic_menu_send"
             android:title="Realm" />
         <item
+            android:id="@+id/nav_ormlite"
+            android:icon="@drawable/ic_menu_send"
+            android:title="OrmLite" />
+        <item
+            android:id="@+id/nav_berkeley"
+            android:icon="@drawable/ic_menu_send"
+            android:title="Berkeley" />
+        <item
             android:id="@+id/nav_settings"
             android:icon="@drawable/ic_menu_manage"
             android:title="Tools" />
