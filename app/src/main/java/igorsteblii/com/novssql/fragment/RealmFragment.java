@@ -24,33 +24,33 @@ import static igorsteblii.com.novssql.sql.Columns.COLUMN_NAME_YEAR;
  */
 public class RealmFragment extends BaseFragment {
 
-    private Realm realm;
+    private Realm mRealm;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        realm = Realm.getDefaultInstance();
+        mRealm = Realm.getDefaultInstance();
         addDatesIfDoNotExist();
     }
 
     private void addDatesIfDoNotExist() {
-        long count = realm.where(Date.class).count();
+        long count = mRealm.where(Date.class).count();
         if (count == 0) {
             Date d;
-            realm.beginTransaction();
+            mRealm.beginTransaction();
             for (int year : DEFAULT_YEARS) {
                 d = new Date(year);
-                realm.copyToRealm(d);
+                mRealm.copyToRealm(d);
             }
-            realm.commitTransaction();
+            mRealm.commitTransaction();
         }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        realm.close();
-        realm = null;
+        mRealm.close();
+        mRealm = null;
     }
 
     /*Select all songs where 'year' is greater than '2001'*/
@@ -67,8 +67,8 @@ public class RealmFragment extends BaseFragment {
     }
 
     private RealmResults<Song> getByYearFromDateTable() {
-        RealmResults<Date> dates = realm.where(Date.class).findAll();
-        RealmQuery<Song> query = realm.where(Song.class);
+        RealmResults<Date> dates = mRealm.where(Date.class).findAll();
+        RealmQuery<Song> query = mRealm.where(Song.class);
         query.beginGroup();
         for (int i = 0; i < dates.size(); i++) {
             if (i != 0) {
@@ -82,14 +82,14 @@ public class RealmFragment extends BaseFragment {
 
     @NonNull
     private RealmResults<Song> getByYear() {
-        return realm.where(Song.class).greaterThan("year", 2001).findAll();
+        return mRealm.where(Song.class).greaterThan("year", 2001).findAll();
     }
 
     @Override
     protected void selectAll() {
         long time = System.currentTimeMillis();
-        RealmResults<Song> all = realm.where(Song.class).findAll();
-        //realm.copyFromRealm(all); // if you have multithreading
+        RealmResults<Song> all = mRealm.where(Song.class).findAll();
+        //mRealm.copyFromRealm(all); // if you have multithreading
         long time2 = System.currentTimeMillis() - time;
         String s = "count: " + all.size() + " ,select all: " + time2 + "ms";
         mAdapter.add(all);
@@ -101,14 +101,14 @@ public class RealmFragment extends BaseFragment {
     protected void addFromJson() {
         JSONArray array = listener.getJsonSonArray();
         long time = System.currentTimeMillis();
-        realm.beginTransaction();
+        mRealm.beginTransaction();
         try {
-            realm.createAllFromJson(Song.class, array);
+            mRealm.createAllFromJson(Song.class, array);
         } catch (RealmPrimaryKeyConstraintException e) {
             Snackbar.make(getView(), e.getMessage(), Snackbar.LENGTH_SHORT).show();
             return;
         } finally {
-            realm.commitTransaction();
+            mRealm.commitTransaction();
         }
         time = System.currentTimeMillis() - time;
         String s = "count : " + array.length() + ", " + "from JSON to Realm :" + time + "ms";
@@ -119,14 +119,14 @@ public class RealmFragment extends BaseFragment {
     protected void addRandom() {
         List<Song> song = listener.createRandomSong();
         long time = System.currentTimeMillis();
-        realm.beginTransaction();
+        mRealm.beginTransaction();
         try {
-            realm.copyToRealm(song);
+            mRealm.copyToRealm(song);
         } catch (RealmPrimaryKeyConstraintException e) {
             Snackbar.make(getView(), e.getMessage(), Snackbar.LENGTH_SHORT).show();
             return;
         } finally {
-            realm.commitTransaction();
+            mRealm.commitTransaction();
         }
         time = System.currentTimeMillis() - time;
         String s = "count : " + song.size() + ", " + "insert:" + time + "ms";

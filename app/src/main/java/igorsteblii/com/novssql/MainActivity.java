@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private static final String ALPHABET = "abcdefghijklmnopqrstuvwxyz";
 
-    private JSONArray songsJsonArray;
+    private JSONArray mSongsJsonArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         try {
-            songsJsonArray = loadCatalogFromAsset();
+            mSongsJsonArray = loadCatalogFromAsset();
         } catch (JSONException | IOException e) {
             Snackbar.make(null, e.getMessage(), Snackbar.LENGTH_SHORT).show();
 
@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public JSONArray getJsonSonArray() {
-        return songsJsonArray;
+        return mSongsJsonArray;
     }
 
     /**

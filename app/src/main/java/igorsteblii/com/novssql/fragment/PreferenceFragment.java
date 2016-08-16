@@ -16,7 +16,7 @@ import igorsteblii.com.novssql.sql.DataBaseTableOpenHelper;
 import io.realm.Realm;
 
 /**
- * Created by igorsteblii on 09.08.16.
+ * @author igorsteblii on 09.08.16.
  */
 public class PreferenceFragment extends Fragment implements View.OnClickListener {
 
