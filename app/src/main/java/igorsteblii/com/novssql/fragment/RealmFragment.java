@@ -17,7 +17,7 @@ import io.realm.RealmResults;
 import io.realm.exceptions.RealmPrimaryKeyConstraintException;
 
 import static igorsteblii.com.novssql.Constants.DEFAULT_YEARS;
-import static igorsteblii.com.novssql.sql.DataBaseTableOpenHelper.Columns.COLUMN_NAME_YEAR;
+import static igorsteblii.com.novssql.sql.Columns.COLUMN_NAME_YEAR;
 
 /**
  * @author igorsteblii on 05.08.16.

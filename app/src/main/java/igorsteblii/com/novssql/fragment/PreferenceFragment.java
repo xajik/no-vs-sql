@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.database.FirebaseDatabase;
+
 import igorsteblii.com.novssql.R;
 import igorsteblii.com.novssql.dto.Date;
 import igorsteblii.com.novssql.dto.Song;
@@ -24,6 +26,7 @@ public class PreferenceFragment extends Fragment implements View.OnClickListener
         View view = inflater.inflate(R.layout.preference_layout, container);
         view.findViewById(R.id.drop_sql).setOnClickListener(this);
         view.findViewById(R.id.drop_realm).setOnClickListener(this);
+        view.findViewById(R.id.drop_firebase).setOnClickListener(this);
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -40,6 +43,9 @@ public class PreferenceFragment extends Fragment implements View.OnClickListener
             case R.id.drop_sql:
                 getActivity().deleteDatabase(DataBaseTableOpenHelper.DATABASE_NAME);
                 new DataBaseTableOpenHelper(getActivity()).dropTable();
+                break;
+            case R.id.drop_firebase:
+                FirebaseDatabase.getInstance().getReference(FirebaseFragment.DATABASE_NAME).removeValue();
                 break;
         }
     }

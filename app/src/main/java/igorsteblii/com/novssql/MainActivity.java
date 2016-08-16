@@ -2,9 +2,12 @@ package igorsteblii.com.novssql;
 
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -23,7 +26,7 @@ import java.util.Random;
 
 import igorsteblii.com.novssql.dto.Song;
 import igorsteblii.com.novssql.fragment.BaseFragment;
-import igorsteblii.com.novssql.fragment.BerkeleyFragment;
+import igorsteblii.com.novssql.fragment.FirebaseFragment;
 import igorsteblii.com.novssql.fragment.PreferenceFragment;
 import igorsteblii.com.novssql.fragment.RealmFragment;
 import igorsteblii.com.novssql.fragment.SqlLiteFragment;
@@ -50,7 +53,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         try {
             songsJsonArray = loadCatalogFromAsset();
         } catch (JSONException | IOException e) {
-            e.printStackTrace();
+            Snackbar.make(null, e.getMessage(), Snackbar.LENGTH_SHORT).show();
+
         }
     }
 
@@ -68,22 +72,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        Fragment fragment = null;
         switch (id) {
             case R.id.nav_sqlite:
-                transaction.replace(R.id.container, new SqlLiteFragment());
+                fragment = new SqlLiteFragment();
                 break;
             case R.id.nav_realm:
-                transaction.replace(R.id.container, new RealmFragment());
+                fragment = new RealmFragment();
                 break;
-            case R.id.nav_ormlite:
-                transaction.replace(R.id.container, new BerkeleyFragment());
-            case R.id.nav_berkeley:
-                transaction.replace(R.id.container, new BerkeleyFragment());
+            case R.id.nav_firebase:
+                fragment = new FirebaseFragment();
                 break;
             case R.id.nav_settings:
-                transaction.replace(R.id.container, new PreferenceFragment());
+                fragment = new PreferenceFragment();
                 break;
+            default:
+                return false;
         }
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle(fragment.getClass().getSimpleName());
+        }
+        transaction.replace(R.id.container, fragment);
         transaction.commit();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -99,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      * Load catalog.json file from assets which contains Json enteties of {@link Song}
      */
     private JSONArray loadCatalogFromAsset() throws JSONException, IOException {
-        String json = null;
+        String json;
         InputStream is = getAssets().open("catalog.json");
         int size = is.available();
         byte[] buffer = new byte[size];
@@ -121,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Random random = new Random();
         for (int i = 0; i < 20; i++) {
             String[] strings = randomString(3, 15);
-            songs.add(new Song(strings[0], strings[1], strings[2], random.nextLong(), random.nextInt(year)));
+            songs.add(new Song(random.nextInt() + year, strings[1], strings[2], random.nextLong(), random.nextInt(year)));
         }
         return songs;
     }

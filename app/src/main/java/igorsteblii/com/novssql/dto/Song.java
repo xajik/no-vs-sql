@@ -9,7 +9,7 @@ import io.realm.annotations.PrimaryKey;
 public class Song extends RealmObject {
 
     @PrimaryKey
-    private String uid;
+    private int id;
     private String artist;
     private String title;
     private long duration;
@@ -18,8 +18,8 @@ public class Song extends RealmObject {
     public Song() {
     }
 
-    public Song(String uid, String artist, String title, long duration, int year) {
-        this.uid = uid;
+    public Song(int id, String artist, String title, long duration, int year) {
+        this.id = id;
         this.artist = artist;
         this.title = title;
         this.duration = duration;
@@ -58,12 +58,12 @@ public class Song extends RealmObject {
         this.artist = artist;
     }
 
-    public String getUid() {
-        return uid;
+    public int getId() {
+        return id;
     }
 
-    public void setUid(String uid) {
-        this.uid = uid;
+    public void setId(int id) {
+        this.id = id;
     }
 
 }

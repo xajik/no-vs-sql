@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.provider.BaseColumns;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +28,7 @@ public class DataBaseTableOpenHelper extends SQLiteOpenHelper {
     private static final String SQL_SONG_CREATE_ENTRIES =
             "CREATE TABLE " + Columns.SONG_TABLE_NAME + " (" +
                     Columns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    Columns.COLUMN_NAME_UID + TEXT_TYPE + COMMA +
+                    Columns.COLUMN_NAME_ID + INTEGER_TYPE + COMMA +
                     Columns.COLUMN_NAME_ARTIST + TEXT_TYPE + COMMA +
                     Columns.COLUMN_NAME_TITLE + TEXT_TYPE + COMMA +
                     Columns.COLUMN_NAME_DURATION + INTEGER_TYPE + COMMA +
@@ -77,7 +76,7 @@ public class DataBaseTableOpenHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
         for (Song s : songs) {
-            values.put(Columns.COLUMN_NAME_UID, s.getUid());
+            values.put(Columns.COLUMN_NAME_ID, s.getId());
             values.put(Columns.COLUMN_NAME_ARTIST, s.getArtist());
             values.put(Columns.COLUMN_NAME_TITLE, s.getTitle());
             values.put(Columns.COLUMN_NAME_DURATION, s.getDuration());
@@ -97,7 +96,7 @@ public class DataBaseTableOpenHelper extends SQLiteOpenHelper {
         while (!c.isAfterLast()) {
             list.add(
                     new Song(
-                            c.getString(c.getColumnIndex(Columns.COLUMN_NAME_UID)),
+                            c.getInt(c.getColumnIndex(Columns.COLUMN_NAME_ID)),
                             c.getString(c.getColumnIndex(Columns.COLUMN_NAME_ARTIST)),
                             c.getString(c.getColumnIndex(Columns.COLUMN_NAME_TITLE)),
                             c.getLong(c.getColumnIndex(Columns.COLUMN_NAME_DURATION)),
@@ -123,7 +122,7 @@ public class DataBaseTableOpenHelper extends SQLiteOpenHelper {
         while (!c.isAfterLast()) {
             list.add(
                     new Song(
-                            c.getString(c.getColumnIndex(Columns.COLUMN_NAME_UID)),
+                            c.getInt(c.getColumnIndex(Columns.COLUMN_NAME_ID)),
                             c.getString(c.getColumnIndex(Columns.COLUMN_NAME_ARTIST)),
                             c.getString(c.getColumnIndex(Columns.COLUMN_NAME_TITLE)),
                             c.getLong(c.getColumnIndex(Columns.COLUMN_NAME_DURATION)),
@@ -168,18 +167,6 @@ public class DataBaseTableOpenHelper extends SQLiteOpenHelper {
                         values);
             }
         }
-    }
-
-    public static class Columns implements BaseColumns {
-
-        public static final String COLUMN_NAME_YEAR = "year";
-        private static final String SONG_TABLE_NAME = "song_table";
-        private static final String DATE_TABLE_NAME = "date_table";
-        private static final String COLUMN_NAME_UID = "uid";
-        private static final String COLUMN_NAME_ARTIST = "artist";
-        private static final String COLUMN_NAME_TITLE = "title";
-        private static final String COLUMN_NAME_DURATION = "duration";
-
     }
 
 }
